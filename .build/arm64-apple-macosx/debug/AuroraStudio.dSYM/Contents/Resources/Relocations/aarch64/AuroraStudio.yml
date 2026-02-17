@@ -1,5 +1,0 @@
----
-triple:          'arm64-apple-darwin'
-binary-path:     '/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/debug/AuroraStudio'
-relocations:     []
-...
