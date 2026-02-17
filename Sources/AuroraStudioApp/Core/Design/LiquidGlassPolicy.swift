@@ -50,8 +50,10 @@ struct LiquidGlassPolicy: Codable {
             return .navigation
         case .primaryCTA:
             return .primaryAction
-        case .secondaryCTA, .sidebarBadge, .generationStatusBadge, .resultActionChip:
+        case .secondaryCTA:
             return .secondaryAction
+        case .sidebarBadge, .generationStatusBadge, .resultActionChip:
+            return .ornamental
         case .ornamentalChip, .backgroundPanel, .heroPromptCard, .heroAccessoryControls, .generationStageCard:
             return .ornamental
         }
