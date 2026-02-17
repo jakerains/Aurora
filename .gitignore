@@ -1,14 +1,5 @@
-# Skills directories
-.agent/
-.agents/
-.claude/
-.codex/
-.copilot/
-.cursor/
-.factory/
-.gemini/
-.github/skills/
-.opencode/
+# Hidden tool/skills directories
+.*/skills/
 
 # Swift / Xcode
 .build/
