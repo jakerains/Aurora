@@ -1,0 +1,32 @@
+# Skills directories
+.agents/
+.claude/
+.codex/
+.copilot/
+.cursor/
+.factory/
+.gemini/
+.github/skills/
+.opencode/
+
+# Swift / Xcode
+.build/
+*.o
+*.d
+*.swp
+*.xcuserdata/
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Distribution output
+dist/
