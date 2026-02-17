@@ -1,5 +1,6 @@
 # Hidden tool/skills directories
 .*/skills/
+skills/
 
 # Swift / Xcode
 .build/
