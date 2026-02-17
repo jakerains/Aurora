@@ -1,0 +1,37 @@
+{
+  "": {
+    "dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/AuroraStudioAppTests.d",
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/AuroraStudioAppTests.o",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/master.swiftdeps"
+  },
+  "/Users/jakerains/Projects/imagegenerator/Tests/AuroraStudioAppTests/CoreModelTests.swift": {
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/CoreModelTests.swift.o",
+    "swiftmodule": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/CoreModelTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/CoreModelTests.swiftdeps",
+    "diagnostics": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/CoreModelTests.dia"
+  },
+  "/Users/jakerains/Projects/imagegenerator/Tests/AuroraStudioAppTests/ImageViewerAndExportTests.swift": {
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ImageViewerAndExportTests.swift.o",
+    "swiftmodule": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ImageViewerAndExportTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ImageViewerAndExportTests.swiftdeps",
+    "diagnostics": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ImageViewerAndExportTests.dia"
+  },
+  "/Users/jakerains/Projects/imagegenerator/Tests/AuroraStudioAppTests/ModelCatalogServiceTests.swift": {
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ModelCatalogServiceTests.swift.o",
+    "swiftmodule": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ModelCatalogServiceTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ModelCatalogServiceTests.swiftdeps",
+    "diagnostics": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ModelCatalogServiceTests.dia"
+  },
+  "/Users/jakerains/Projects/imagegenerator/Tests/AuroraStudioAppTests/QueueServiceTests.swift": {
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/QueueServiceTests.swift.o",
+    "swiftmodule": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/QueueServiceTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/QueueServiceTests.swiftdeps",
+    "diagnostics": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/QueueServiceTests.dia"
+  },
+  "/Users/jakerains/Projects/imagegenerator/Tests/AuroraStudioAppTests/ResultHistoryStoreTests.swift": {
+    "object": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ResultHistoryStoreTests.swift.o",
+    "swiftmodule": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ResultHistoryStoreTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ResultHistoryStoreTests.swiftdeps",
+    "diagnostics": "/Users/jakerains/Projects/imagegenerator/.build/arm64-apple-macosx/release/AuroraStudioAppTests.build/ResultHistoryStoreTests.dia"
+  }
+}
