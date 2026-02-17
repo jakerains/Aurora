@@ -1,4 +1,5 @@
 # Skills directories
+.agent/
 .agents/
 .claude/
 .codex/
