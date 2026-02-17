@@ -77,10 +77,49 @@ private struct HistoryCard: View {
             .contentShape(.rect(cornerRadius: 14))
         }
         .buttonStyle(.plain)
+        .contextMenu {
+            if let first = result.images.first,
+               let nsImage = imageFromBase64(first.base64Data) {
+                Button {
+                    copyImage(nsImage)
+                } label: {
+                    Label("Copy Image", systemImage: "doc.on.doc")
+                }
+
+                Button {
+                    shareImage(nsImage)
+                } label: {
+                    Label("Share Image", systemImage: "square.and.arrow.up")
+                }
+            }
+
+            Button(action: onOpen) {
+                Label("Open Viewer", systemImage: "arrow.up.left.and.arrow.down.right")
+            }
+        }
     }
 
     private func imageFromBase64(_ value: String) -> NSImage? {
         guard let data = Data(base64Encoded: value) else { return nil }
         return NSImage(data: data)
+    }
+
+    private func copyImage(_ image: NSImage) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        _ = pasteboard.writeObjects([image])
+    }
+
+    private func shareImage(_ image: NSImage) {
+        guard let anchorView = NSApp.keyWindow?.contentView else { return }
+
+        let picker = NSSharingServicePicker(items: [image])
+        let sourceRect = NSRect(
+            x: anchorView.bounds.midX,
+            y: anchorView.bounds.midY,
+            width: 1,
+            height: 1
+        )
+        picker.show(relativeTo: sourceRect, of: anchorView, preferredEdge: .minY)
     }
 }

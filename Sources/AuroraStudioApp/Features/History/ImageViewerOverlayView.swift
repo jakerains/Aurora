@@ -7,6 +7,7 @@ struct ImageViewerOverlayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @FocusState private var isViewerFocused: Bool
+    @State private var shareAnchorView: NSView?
 
     var body: some View {
         if appState.isViewerPresented, let result = appState.currentViewerResult {
@@ -30,6 +31,10 @@ struct ImageViewerOverlayView: View {
             }
             .focusable()
             .focused($isViewerFocused)
+            .background(
+                ShareAnchorView(anchorView: $shareAnchorView)
+                    .frame(width: 0, height: 0)
+            )
             .onAppear {
                 isViewerFocused = true
             }
@@ -81,6 +86,24 @@ struct ImageViewerOverlayView: View {
                 .buttonStyle(.glassProminent)
                 .accessibilityLabel("Save current image")
 
+                Button {
+                    copyCurrentImage()
+                } label: {
+                    Label("Copy", systemImage: "doc.on.doc")
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel("Copy current image")
+                .disabled(currentViewerNSImage == nil)
+
+                Button {
+                    shareCurrentImage()
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel("Share current image")
+                .disabled(currentViewerNSImage == nil)
+
                 Spacer(minLength: 8)
 
                 if let result = appState.currentViewerResult {
@@ -99,8 +122,7 @@ struct ImageViewerOverlayView: View {
             RoundedRectangle(cornerRadius: 18)
                 .fill(Color.black.opacity(reduceTransparency ? 0.12 : 0.24))
 
-            if let data = appState.currentViewerImageData,
-               let image = NSImage(data: data) {
+            if let image = currentViewerNSImage {
                 Image(nsImage: image)
                     .resizable()
                     .scaledToFit()
@@ -125,12 +147,34 @@ struct ImageViewerOverlayView: View {
             navigationButton(systemImage: "chevron.right", action: appState.viewerNextImage)
                 .padding(.trailing, 14)
         }
+        .contextMenu {
+            Button {
+                copyCurrentImage()
+            } label: {
+                Label("Copy Image", systemImage: "doc.on.doc")
+            }
+            .disabled(currentViewerNSImage == nil)
+
+            Button {
+                shareCurrentImage()
+            } label: {
+                Label("Share Image", systemImage: "square.and.arrow.up")
+            }
+            .disabled(currentViewerNSImage == nil)
+
+            Button {
+                Task { await appState.exportCurrentViewerImage() }
+            } label: {
+                Label("Save As…", systemImage: "square.and.arrow.down")
+            }
+        }
     }
 
     private func filmstrip(for result: GenerationResult) -> some View {
         ScrollView(.horizontal) {
             HStack(spacing: 10) {
                 ForEach(Array(result.images.enumerated()), id: \.element.id) { index, image in
+                    let nsImage = decodedImage(from: image)
                     Button {
                         appState.viewerSelectImage(index)
                     } label: {
@@ -146,6 +190,23 @@ struct ImageViewerOverlayView: View {
                                 lineWidth: index == appState.viewerImageIndex ? 2 : 1
                             )
                     }
+                    .contextMenu {
+                        Button {
+                            appState.viewerSelectImage(index)
+                            copyImage(nsImage)
+                        } label: {
+                            Label("Copy Image", systemImage: "doc.on.doc")
+                        }
+                        .disabled(nsImage == nil)
+
+                        Button {
+                            appState.viewerSelectImage(index)
+                            shareImage(nsImage)
+                        } label: {
+                            Label("Share Image", systemImage: "square.and.arrow.up")
+                        }
+                        .disabled(nsImage == nil)
+                    }
                     .accessibilityLabel("Select image \(index + 1)")
                 }
             }
@@ -156,9 +217,9 @@ struct ImageViewerOverlayView: View {
     }
 
     private func thumbnail(for image: GeneratedImage) -> some View {
-        Group {
-            if let data = Data(base64Encoded: image.base64Data) ?? DataURL(rawValue: image.base64Data)?.decodeData(),
-               let nsImage = NSImage(data: data) {
+        let nsImage = decodedImage(from: image)
+        return Group {
+            if let nsImage {
                 Image(nsImage: nsImage)
                     .resizable()
                     .scaledToFill()
@@ -174,6 +235,11 @@ struct ImageViewerOverlayView: View {
         .clipShape(.rect(cornerRadius: 10))
     }
 
+    private var currentViewerNSImage: NSImage? {
+        guard let image = appState.currentViewerImage else { return nil }
+        return decodedImage(from: image)
+    }
+
     private func navigationButton(systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
@@ -186,5 +252,81 @@ struct ImageViewerOverlayView: View {
     private func toggleFullScreen() {
         let candidateWindow = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first(where: \.isVisible)
         candidateWindow?.toggleFullScreen(nil)
+    }
+
+    private func decodedImage(from image: GeneratedImage) -> NSImage? {
+        if let data = Data(base64Encoded: image.base64Data) {
+            return NSImage(data: data)
+        }
+        if let data = DataURL(rawValue: image.base64Data)?.decodeData() {
+            return NSImage(data: data)
+        }
+        return nil
+    }
+
+    private func copyCurrentImage() {
+        copyImage(currentViewerNSImage)
+    }
+
+    private func copyImage(_ image: NSImage?) {
+        guard let image else {
+            appState.globalErrorMessage = "No image available to copy."
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        let didWrite = pasteboard.writeObjects([image])
+        if !didWrite {
+            appState.globalErrorMessage = "Unable to copy image to clipboard."
+        }
+    }
+
+    private func shareCurrentImage() {
+        shareImage(currentViewerNSImage)
+    }
+
+    private func shareImage(_ image: NSImage?) {
+        guard let image else {
+            appState.globalErrorMessage = "No image available to share."
+            return
+        }
+        guard let anchorView = NSApp.keyWindow?.contentView ?? shareAnchorView else {
+            appState.globalErrorMessage = "Unable to open share sheet."
+            return
+        }
+
+        let picker = NSSharingServicePicker(items: [image])
+        let sourceRect = NSRect(
+            x: anchorView.bounds.midX,
+            y: anchorView.bounds.midY,
+            width: 1,
+            height: 1
+        )
+        picker.show(
+            relativeTo: sourceRect,
+            of: anchorView,
+            preferredEdge: .minY
+        )
+    }
+}
+
+private struct ShareAnchorView: NSViewRepresentable {
+    @Binding var anchorView: NSView?
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView(frame: .zero)
+        DispatchQueue.main.async {
+            anchorView = view
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        if anchorView !== nsView {
+            DispatchQueue.main.async {
+                anchorView = nsView
+            }
+        }
     }
 }

@@ -653,6 +653,23 @@ private struct GenerationCompletedSurface: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Open full image viewer")
+                .contextMenu {
+                    Button {
+                        copyImage(nsImage)
+                    } label: {
+                        Label("Copy Image", systemImage: "doc.on.doc")
+                    }
+
+                    Button {
+                        shareImage(nsImage)
+                    } label: {
+                        Label("Share Image", systemImage: "square.and.arrow.up")
+                    }
+
+                    Button(action: onOpenViewer) {
+                        Label("Open Viewer", systemImage: "arrow.up.left.and.arrow.down.right")
+                    }
+                }
             } else {
                 ContentUnavailableView("Image unavailable", systemImage: "exclamationmark.triangle")
                     .frame(maxWidth: .infinity, minHeight: 190)
@@ -697,6 +714,25 @@ private struct GenerationCompletedSurface: View {
             return NSImage(data: data)
         }
         return nil
+    }
+
+    private func copyImage(_ image: NSImage) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        _ = pasteboard.writeObjects([image])
+    }
+
+    private func shareImage(_ image: NSImage) {
+        guard let anchorView = NSApp.keyWindow?.contentView else { return }
+
+        let picker = NSSharingServicePicker(items: [image])
+        let sourceRect = NSRect(
+            x: anchorView.bounds.midX,
+            y: anchorView.bounds.midY,
+            width: 1,
+            height: 1
+        )
+        picker.show(relativeTo: sourceRect, of: anchorView, preferredEdge: .minY)
     }
 }
 
